@@ -1,0 +1,4 @@
+pytube == 12.1.0
+python-pptx == 0.6.21
+opencv-python == 4.6.0.66
+scikit-image == 0.19.3
