@@ -4,7 +4,7 @@ from pptx.util import Inches
 import os
 import shutil
 import cv2
-import skimage.measure as measure
+from skimage import metrics
 
 # Change the URL
 url = "https://www.youtube.com/watch?v=RDZUdRSDOok"
@@ -23,7 +23,7 @@ except FileExistsError:
 pdfImg = []
 ytvideo = YouTube(url)
 frameRate = 1  # //it will capture image in each 0.5 second
-video = ytvideo.streams.first().download(filename="videotoextract")
+video = ytvideo.streams.first().download(filename="videotoextract.mp4")
 print("VIDEO Successfully download")
 print("Start cutting into Frames")
 
@@ -36,14 +36,14 @@ def compare_img(img1, img2):
     :return: Score according to the difference between both images
     """
     # load the two input images
-    image_a = cv2.imread("Frames\\" + img1)
-    image_b = cv2.imread("Frames\\" + img2)
+    image_a = cv2.imread("Frames/" + img1)
+    image_b = cv2.imread("Frames/" + img2)
     # convert the images to grayscale
     gray_a = cv2.cvtColor(image_a, cv2.COLOR_BGR2GRAY)
     gray_b = cv2.cvtColor(image_b, cv2.COLOR_BGR2GRAY)
     # compute the Structural Similarity Index (SSIM) between the two
     # images, ensuring that the difference image is returned
-    (score, diff) = measure.compare_ssim(gray_a, gray_b, full=True)
+    (score, diff) = metrics.structural_similarity(gray_a, gray_b, full=True)
     return score
 
 
@@ -76,7 +76,7 @@ def video_to_frames(seconds):
     vid_cap.set(cv2.CAP_PROP_POS_MSEC, seconds * 1000)
     has_frames, image = vid_cap.read()
     if has_frames:
-        cv2.imwrite("Frames\\image" + str(count) + ".jpg", image)  # save frame as JPG file
+        cv2.imwrite("Frames/image" + str(count) + ".jpg", image)  # save frame as JPG file
         if count > 1:
             if compare_img("image" + str(count - 1) + ".jpg", "image" + str(count) + ".jpg") > 1 - epsilon:
                 delete_image(str(count))
@@ -121,7 +121,7 @@ blank_slide_layout = prs.slide_layouts[6]
 left = top = 0
 for i in range(0, len(pdfImg)):
     slide = prs.slides.add_slide(blank_slide_layout)
-    slide.shapes.add_picture("Frames\\image" + str(pdfImg[i]) + ".jpg", left, top, height=prs.slide_height)
+    slide.shapes.add_picture("Frames/image" + str(pdfImg[i]) + ".jpg", left, top, height=prs.slide_height)
 
 prs.save('YouTubeSlides.pptx')
 print("Ppt was saved")
