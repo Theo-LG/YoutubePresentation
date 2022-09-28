@@ -1,1 +1,5 @@
 .env
+videotoextract.mp4
+ytpresentation/__pycache__
+Frames/
+.DS_Store
