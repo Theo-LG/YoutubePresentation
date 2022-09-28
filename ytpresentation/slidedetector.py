@@ -8,7 +8,7 @@ from pytube import YouTube
 
 
 def similarity_score(img1, img2):
-    """_summary_
+    """Measure used to compare frames
 
     Args:
         img1 : Image to compare
@@ -47,6 +47,11 @@ def delete_image(index):
 
 
 def video_to_frames():
+    """Cut video to frames and save them to Frame dir
+
+    Returns:
+        int: Number of frames saved
+    """
     logging.info("Cutting video to frames...")
     vid_cap = cv2.VideoCapture("videotoextract.mp4")
     sec = 0
@@ -66,6 +71,7 @@ def video_to_frames():
 
 def detect_slides(threshold, count):
     """Compare frames from the youtube video to detect slides
+    If two successives frames are identical, we supposed it's a slide
 
     Args:
         threshold (float): Threshold to considere that two images are similar
