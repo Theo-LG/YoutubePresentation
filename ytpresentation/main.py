@@ -11,7 +11,9 @@ from ytpresentation.slidedetector import detect_slides, video_to_frames
 
 def get_parser():
     EPSILON = 0.015
+
     parser = argparse.ArgumentParser()
+
     parser.add_argument(
         "-u", "--url", help="Url of the youtube video", type=str, required=True
     )
@@ -45,7 +47,7 @@ if __name__ == "__main__":
     )
     logging.info("Video successfully downloaded.")
 
-    frame_count = video_to_frames()
+    # frame_count = video_to_frames()
 
     slides_list, delete = detect_slides(args.threshold, frame_count)
 

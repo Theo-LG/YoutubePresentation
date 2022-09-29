@@ -23,27 +23,36 @@ def similarity_score(img1, img2):
     return score
 
 
-def delete_image(index):
-    """Remove an image given the index
+def get_slides(threshold):
+    """Detect slides on the video
+    Here it will not write all frames and load them to compare, everything is done on the fly.
 
     Args:
-        index (_type_): index of the image to remove
+        threshold (float): Threshold to considere that two images are similar
     """
-    filename = "image" + index + ".jpg"
-    file_path = os.path.join("Frames", filename)
-    try:
-        if os.path.isfile(file_path) or os.path.islink(file_path):
-            os.remove(file_path)
-        elif os.path.isdir(file_path):
-            shutil.rmtree(file_path)
-    except Exception as e:
-        print("Failed to delete %s. Reason: %s" % (file_path, e))
+    logging.info("Going through the video...")
+    vid_cap = cv2.VideoCapture("videotoextract.mp4")
+    sec = 1
+    count = 0
+    vid_cap.set(cv2.CAP_PROP_POS_MSEC, 0)
+    has_frames, image1 = vid_cap.read()
+    image1 = None
+    last_was_slide = False
+    while has_frames:
+        # Read image
+        vid_cap.set(cv2.CAP_PROP_POS_MSEC, sec * 1000)
+        has_frames, image2 = vid_cap.read()
+        sec += 1
 
-    """
-    
-    :param seconds: Second in the video to start cutting into frames
-    :return: boolean
-    """
+        # Is this image a new slide
+        if similarity_score(image1, image2) > 1 - threshold:
+            if not last_was_slide:
+                cv2.imwrite("Frames/image" + str(count) + ".jpg", image2)
+                count += 1
+                last_was_slide = True
+        else:
+            last_was_slide = False
+            image1 = image2
 
 
 def video_to_frames():
