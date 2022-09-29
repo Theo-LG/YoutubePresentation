@@ -6,7 +6,7 @@ import shutil
 from pytube import YouTube
 
 from ytpresentation.presentation import save_presentation
-from ytpresentation.slidedetector import detect_slides, video_to_frames
+from ytpresentation.slidedetector import detect_slides, video_to_frames, get_slides
 
 
 def get_parser():
@@ -49,11 +49,13 @@ if __name__ == "__main__":
 
     # frame_count = video_to_frames()
 
-    slides_list, delete = detect_slides(args.threshold, frame_count)
-
+    # slides_list, delete = detect_slides(args.threshold, frame_count)
+    get_slides(args.threshold)
+    """
     save_presentation(slides_list)
 
     logging.info("Cleaning directories...")
     shutil.rmtree("Frames")
     os.remove("videotoextract.mp4")
     logging.info("Done.")
+"""

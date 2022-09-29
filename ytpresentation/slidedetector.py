@@ -36,7 +36,6 @@ def get_slides(threshold):
     count = 0
     vid_cap.set(cv2.CAP_PROP_POS_MSEC, 0)
     has_frames, image1 = vid_cap.read()
-    image1 = None
     last_was_slide = False
     while has_frames:
         # Read image
@@ -45,14 +44,15 @@ def get_slides(threshold):
         sec += 1
 
         # Is this image a new slide
-        if similarity_score(image1, image2) > 1 - threshold:
-            if not last_was_slide:
-                cv2.imwrite("Frames/image" + str(count) + ".jpg", image2)
-                count += 1
-                last_was_slide = True
-        else:
-            last_was_slide = False
-            image1 = image2
+        if has_frames:
+            if similarity_score(image1, image2) > 1 - threshold:
+                if not last_was_slide:
+                    cv2.imwrite("Frames/image" + str(count) + ".jpg", image2)
+                    count += 1
+                    last_was_slide = True
+            else:
+                last_was_slide = False
+                image1 = image2
 
 
 def video_to_frames():
