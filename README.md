@@ -4,10 +4,15 @@ This project aims to create a powerpoint version of any course video available o
 # Setup
 ## Install
 You just have to install requirements.txt :
-> pip install -r requirements.txt 
+```
+pip install -r requirements.txt 
+```
+
 
 OpenCV library can lead to some issues, this can be necessary : 
-> apt-get install ffmpeg libsm6 libxext6  -y 
+```
+apt-get install ffmpeg libsm6 libxext6  -y 
+```
 
 Environment is also available with docker
 
