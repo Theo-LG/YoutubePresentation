@@ -18,7 +18,9 @@ Environment is also available with docker
 
 ## Run 
 Just use the following command after setting up the environment 
-> python ytpresentation/main.py -u "youtube_video_url"
+```
+python ytpresentation/main.py -u "youtube_video_url"
+```
 
 # How it works
 It will download the youtube video and compare successives frames (1 frame per second) to detect powerpoint slides.
