@@ -6,14 +6,16 @@ import shutil
 from pytube import YouTube
 
 from ytpresentation.presentation import save_presentation
-from ytpresentation.slidedetector import detect_slides, video_to_frames, get_slides
+from ytpresentation.slidedetector import get_slides
+from ytpresentation.speech_to_text import get_text
+
+
+# https://www.youtube.com/watch?v=L35fFDpwIM4
 
 
 def get_parser():
     EPSILON = 0.015
-
     parser = argparse.ArgumentParser()
-
     parser.add_argument(
         "-u", "--url", help="Url of the youtube video", type=str, required=True
     )
@@ -29,33 +31,32 @@ def get_parser():
     return parser
 
 
-if __name__ == "__main__":
-    parser = get_parser()
-    args = parser.parse_args()
-    logger = logging.getLogger()
-    logging.basicConfig(level=logging.INFO)
-    logging.info("Creating temp directories.")
+def main(conf):
+    logging.info("Creating temp directories")
     try:
         os.mkdir("Frames")
     except FileExistsError:
         logging.info("Directories already existing. Overwritting.")
 
     logging.info("Downloading video.")
-    ytvideo = YouTube(args.url)
-    video = ytvideo.streams.get_highest_resolution().download(
-        filename="videotoextract.mp4"
-    )
+    ytvideo = YouTube(conf.url)
+    _ = ytvideo.streams.get_highest_resolution().download(filename="videotoextract.mp4")
     logging.info("Video successfully downloaded.")
 
-    # frame_count = video_to_frames()
-
-    # slides_list, delete = detect_slides(args.threshold, frame_count)
-    get_slides(args.threshold)
-    """
-    save_presentation(slides_list)
+    slides_number, timestamp_list = get_slides(conf.threshold)
+    subtitles_list = get_text(timestamp_list, ytvideo)
+    save_presentation(slides_number, subtitles_list)
 
     logging.info("Cleaning directories...")
     shutil.rmtree("Frames")
     os.remove("videotoextract.mp4")
     logging.info("Done.")
-"""
+
+
+if __name__ == "__main__":
+    parser = get_parser()
+    args = parser.parse_args()
+    logger = logging.getLogger()
+    logging.basicConfig(level=logging.INFO)
+
+    main(args)

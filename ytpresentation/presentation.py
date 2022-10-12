@@ -3,12 +3,12 @@ from pptx.util import Inches
 import logging
 
 
-def save_presentation(img_to_keep):
+def save_presentation(slides_number, subtitles_list):
     """Given a list of frames indices, create a presentation
 
     Args:
-        img_to_keep (list): list of frames indices,
-        corresponding to the frames to keep
+        slides_number (int): Number of frames saved
+        subtitles_list (list): List of text to save as notes for each slides
     """
     logging.info("Creating powerpoint...")
     prs = Presentation()
@@ -17,7 +17,7 @@ def save_presentation(img_to_keep):
     blank_slide_layout = prs.slide_layouts[6]
 
     left = top = 0
-    for i in range(0, len(img_to_keep)):
+    for i in range(0, slides_number):
         slide = prs.slides.add_slide(blank_slide_layout)
         slide.shapes.add_picture(
             "Frames/image" + str(img_to_keep[i]) + ".jpg",
