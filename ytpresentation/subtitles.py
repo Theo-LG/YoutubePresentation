@@ -27,11 +27,20 @@ def parse_xml(ytvideo):
 
 
 def get_text(timestamp_list, ytvideo):
+    """Get subtitles corresponding to slides
+
+    Args:
+        timestamp_list (list): list of timestamps corresponding to the slides
+        ytvideo (pytube.Youtube): Pytube video
+
+    Returns:
+        list: List of subtitles
+    """
     parsed_xml_list = parse_xml(ytvideo)
 
     subtitles_list = []
     current_idx = 0
-    for ts in timestamp_list[1:10]:
+    for ts in timestamp_list[1:]:
         text = ""
         max_ts = ts * 1000
         while parsed_xml_list[current_idx][0] < max_ts:
@@ -39,5 +48,9 @@ def get_text(timestamp_list, ytvideo):
                 text += parsed_xml_list[current_idx][1] + " "
             current_idx += 1
         subtitles_list.append(text.strip())
-    subtitles_list
+    # Add last frame
+    text = " ".join(
+        [i[1] for i in parsed_xml_list[current_idx:] if len(i[1]) > 1]
+    ).strip()
+    subtitles_list.append(text)
     return subtitles_list

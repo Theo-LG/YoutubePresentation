@@ -26,7 +26,7 @@ def get_slides(threshold):
     Args:
         threshold (float): Threshold to considere that two images are similar
     """
-    logging.info("Going through the video...")
+    logging.info("Extracting slides...")
     vid_cap = cv2.VideoCapture("videotoextract.mp4")
 
     sec = 1

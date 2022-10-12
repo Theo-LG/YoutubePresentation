@@ -7,7 +7,7 @@ from pytube import YouTube
 
 from ytpresentation.presentation import save_presentation
 from ytpresentation.slidedetector import get_slides
-from ytpresentation.speech_to_text import get_text
+from ytpresentation.subtitles import get_text
 
 
 # https://www.youtube.com/watch?v=L35fFDpwIM4
