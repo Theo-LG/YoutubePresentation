@@ -16,15 +16,17 @@ def save_presentation(slides_number, subtitles_list):
     prs.slide_height = Inches(9)
     blank_slide_layout = prs.slide_layouts[6]
 
-    left = top = 0
     for i in range(0, slides_number):
         slide = prs.slides.add_slide(blank_slide_layout)
         slide.shapes.add_picture(
-            "Frames/image" + str(img_to_keep[i]) + ".jpg",
-            left,
-            top,
+            "Frames/image" + str(i) + ".jpg",
+            0,
+            0,
             height=prs.slide_height,
         )
-
+        # Add subtitles as note
+        notes_slide = slide.notes_slide
+        text_frame = notes_slide.notes_text_frame
+        text_frame.text = subtitles_list[i]
     prs.save("YouTubeSlides.pptx")
     logging.info("PowerPoint saved")
